@@ -8,5 +8,15 @@ pub fn main_js(){
     log::warn!("waring");
     log::error!("Error");
 
-    dominator::append_dom(&dominator::body(), html!("div", {.text("Hello world!")}));
+    let window = web_sys::window().unwrap();
+    let document = window.document().unwrap();
+    let body = document.body().unwrap();
+
+    let elem = document.create_element("div").unwrap();
+    elem.set_text_content(Some("this is a text"));
+    let dom = dominator::Dom::new(elem.unchecked_into());
+
+
+   // dominator::append_dom(&dominator::body(), html!("div", {.text("Hello world!")}));
+   dominator::append_dom(&body,dom);
 }

@@ -266,21 +266,6 @@
             const ret = getObject(arg0).createElement(v0);
             return addHeapObject(ret);
         }, arguments) };
-        imports.wbg.__wbg_createTextNode_0c38fd80a5b2284d = function(arg0, arg1, arg2) {
-            var v0 = getCachedStringFromWasm0(arg1, arg2);
-            const ret = getObject(arg0).createTextNode(v0);
-            return addHeapObject(ret);
-        };
-        imports.wbg.__wbg_instanceof_HtmlElement_3bcc4ff70cfdcba5 = function(arg0) {
-            let result;
-            try {
-                result = getObject(arg0) instanceof HTMLElement;
-            } catch (_) {
-                result = false;
-            }
-            const ret = result;
-            return ret;
-        };
         imports.wbg.__wbg_debug_7d879afce6cf56cb = function(arg0, arg1, arg2, arg3) {
             console.debug(getObject(arg0), getObject(arg1), getObject(arg2), getObject(arg3));
         };
@@ -306,6 +291,10 @@
             var len1 = WASM_VECTOR_LEN;
             getInt32Memory0()[arg0 / 4 + 1] = len1;
             getInt32Memory0()[arg0 / 4 + 0] = ptr1;
+        };
+        imports.wbg.__wbg_settextContent_d271bab459cbb1ba = function(arg0, arg1, arg2) {
+            var v0 = getCachedStringFromWasm0(arg1, arg2);
+            getObject(arg0).textContent = v0;
         };
         imports.wbg.__wbg_appendChild_580ccb11a660db68 = function() { return handleError(function (arg0, arg1) {
             const ret = getObject(arg0).appendChild(getObject(arg1));
@@ -396,7 +385,7 @@
         return __wbg_finalize_init(instance, module);
     }
 
-    const wasm_path = "js/assets/dominator_hello_world-7a5e84d0.wasm";
+    const wasm_path = "js/assets/dominator_hello_world-f8a5722c.wasm";
 
                 
                 const final_path = wasm_path; __wbg_init(final_path).catch(console.error);
