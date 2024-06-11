@@ -261,6 +261,10 @@
             const ret = getObject(arg0).body;
             return isLikeNone(ret) ? 0 : addHeapObject(ret);
         };
+        imports.wbg.__wbg_head_d7a99d3f407e2291 = function(arg0) {
+            const ret = getObject(arg0).head;
+            return isLikeNone(ret) ? 0 : addHeapObject(ret);
+        };
         imports.wbg.__wbg_createElement_8bae7856a4bb7411 = function() { return handleError(function (arg0, arg1, arg2) {
             var v0 = getCachedStringFromWasm0(arg1, arg2);
             const ret = getObject(arg0).createElement(v0);
@@ -271,6 +275,23 @@
             const ret = getObject(arg0).createTextNode(v0);
             return addHeapObject(ret);
         };
+        imports.wbg.__wbg_classList_1f0528ee002e56d4 = function(arg0) {
+            const ret = getObject(arg0).classList;
+            return addHeapObject(ret);
+        };
+        imports.wbg.__wbg_style_c8d59a2841ce7760 = function(arg0) {
+            const ret = getObject(arg0).style;
+            return addHeapObject(ret);
+        };
+        imports.wbg.__wbg_cssRules_d6a2008df6b58846 = function() { return handleError(function (arg0) {
+            const ret = getObject(arg0).cssRules;
+            return addHeapObject(ret);
+        }, arguments) };
+        imports.wbg.__wbg_insertRule_5bbb48f79869789c = function() { return handleError(function (arg0, arg1, arg2, arg3) {
+            var v0 = getCachedStringFromWasm0(arg1, arg2);
+            const ret = getObject(arg0).insertRule(v0, arg3 >>> 0);
+            return ret;
+        }, arguments) };
         imports.wbg.__wbg_instanceof_HtmlElement_3bcc4ff70cfdcba5 = function(arg0) {
             let result;
             try {
@@ -280,10 +301,6 @@
             }
             const ret = result;
             return ret;
-        };
-        imports.wbg.__wbg_style_c3fc3dd146182a2d = function(arg0) {
-            const ret = getObject(arg0).style;
-            return addHeapObject(ret);
         };
         imports.wbg.__wbg_debug_7d879afce6cf56cb = function(arg0, arg1, arg2, arg3) {
             console.debug(getObject(arg0), getObject(arg1), getObject(arg2), getObject(arg3));
@@ -302,6 +319,22 @@
         };
         imports.wbg.__wbg_warn_5d3f783b0bae8943 = function(arg0, arg1, arg2, arg3) {
             console.warn(getObject(arg0), getObject(arg1), getObject(arg2), getObject(arg3));
+        };
+        imports.wbg.__wbg_length_475ff4a03dc28ed8 = function(arg0) {
+            const ret = getObject(arg0).length;
+            return ret;
+        };
+        imports.wbg.__wbg_get_f9337f90df846cd3 = function(arg0, arg1) {
+            const ret = getObject(arg0)[arg1 >>> 0];
+            return isLikeNone(ret) ? 0 : addHeapObject(ret);
+        };
+        imports.wbg.__wbg_settype_7b7dffd4b4bf2115 = function(arg0, arg1, arg2) {
+            var v0 = getCachedStringFromWasm0(arg1, arg2);
+            getObject(arg0).type = v0;
+        };
+        imports.wbg.__wbg_sheet_9e3f908cd31bd5db = function(arg0) {
+            const ret = getObject(arg0).sheet;
+            return isLikeNone(ret) ? 0 : addHeapObject(ret);
         };
         imports.wbg.__wbindgen_string_get = function(arg0, arg1) {
             const obj = getObject(arg1);
@@ -336,6 +369,10 @@
             var v1 = getCachedStringFromWasm0(arg3, arg4);
             var v2 = getCachedStringFromWasm0(arg5, arg6);
             getObject(arg0).setProperty(v0, v1, v2);
+        }, arguments) };
+        imports.wbg.__wbg_add_dcb05a8ba423bdac = function() { return handleError(function (arg0, arg1, arg2) {
+            var v0 = getCachedStringFromWasm0(arg1, arg2);
+            getObject(arg0).add(v0);
         }, arguments) };
         imports.wbg.__wbg_instanceof_Error_e20bb56fd5591a93 = function(arg0) {
             let result;
@@ -422,7 +459,7 @@
         return __wbg_finalize_init(instance, module);
     }
 
-    const wasm_path = "js/assets/dominator_hello_world-37a1590c.wasm";
+    const wasm_path = "js/assets/dominator_hello_world-770a32af.wasm";
 
                 
                 const final_path = wasm_path; __wbg_init(final_path).catch(console.error);

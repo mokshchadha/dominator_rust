@@ -1,6 +1,7 @@
-use dominator::{html, styles, traits::AsStr, DomBuilder};
+use dominator::{class, html, pseudo, Dom, DomBuilder};
+use once_cell::sync::Lazy;
 use wasm_bindgen::prelude::*;
-use web_sys::{Element, HtmlElement};
+use web_sys::HtmlElement;
 
 #[wasm_bindgen(start)]
 pub fn main_js() {
@@ -27,13 +28,26 @@ pub fn main_js() {
     dominator::append_dom(
         &dominator::body(),
         html!("div", {
-               .children(children_text.into_iter().map(|text|{
-                html!("li", {
-                    .text(text).apply(add_styles)
-                })
+               .children(children_text.into_iter().enumerate().map(|(index, text)|{
+                render_element(index, text)
                }))
         }),
     );
+}
+
+static MY_CLASS: Lazy<String> = Lazy::new(|| {
+    class! {
+       .style("color", "red").style("font-size", "xx-large").pseudo!(":hover", {
+        .style("color", "blue")
+       })
+    }
+});
+
+fn render_element(index: usize, text: &str) -> Dom {
+    log::info!("render {:?}", *MY_CLASS);
+    return html!("li", {
+        .text(&format!("{:?} {:?}",  index, text)).class(&*MY_CLASS)
+    });
 }
 
 fn add_styles(b: DomBuilder<HtmlElement>) -> DomBuilder<HtmlElement> {
