@@ -16,3 +16,5 @@ Cargo.lock
 dominator-hello-world/node_modules/*
 
 .vscode
+
+dist/
