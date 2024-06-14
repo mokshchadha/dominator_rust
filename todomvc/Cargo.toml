@@ -1,16 +1,31 @@
 [package]
 name = "todomvc"
 version = "0.1.0"
-edition = "2021"
+description = "TodoMVC using dominator"
+authors = ["Pauan <pauanyu+github@pm.me>"]
+categories = ["wasm"]
+readme = "README.md"
+license = "MIT"
+edition = "2018"
+
+[workspace]
 
 [dependencies]
-dominator = "0.5.34"
-futures-signals = "0.3.33"
-log = "0.4.21"
-once_cell = "1.19.0"
-reqwasm = "0.5.0"
-serde_derive = "1.0.203"
-wasm-bindgen = "0.2.92"
-wasm-logger = "0.2.0"
-web-sys = "0.3.69"
+console_error_panic_hook = "0.1.6"
+dominator = "0.5.21"
+wasm-bindgen = "0.2.74"
+futures-signals = "0.3.20"
+serde_json = "1.0.64"
+serde_derive = "1.0.126"
 
+[dependencies.serde]
+version = "1.0.126"
+features = ["rc"]
+
+[dependencies.web-sys]
+version = "0.3.51"
+features = [
+    "HtmlInputElement",
+    "Storage",
+    "Url",
+]

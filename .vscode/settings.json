@@ -1,6 +1,4 @@
 {
-    "cSpell.words": [
-        "bindgen"
-    ],
-    "editor.formatOnSave": true
+  "cSpell.words": ["bindgen", "dedupe", "todos"],
+  "editor.formatOnSave": true
 }
