@@ -1,48 +1,15 @@
 use std::sync::Arc;
 use std::cell::Cell;
-use web_sys::{Url, HtmlInputElement};
+use web_sys::{ HtmlInputElement};
 use serde_derive::{Serialize, Deserialize};
 use futures_signals::signal::{Signal, SignalExt, Mutable};
 use futures_signals::signal_vec::{SignalVec, SignalVecExt, MutableVec};
 use dominator::{Dom, EventOptions, text_signal, html, clone, events, link, with_node, routing};
+use crate::router::Route;
 
 use crate::todo::Todo;
 use crate::util::{trim, local_storage};
 
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Route {
-    Active,
-    Completed,
-    All,
-}
-
-impl Route {
-    // This could use more advanced URL parsing, but it isn't needed
-    pub fn from_url(url: &str) -> Self {
-        let url = Url::new(&url).unwrap();
-        match url.hash().as_str() {
-            "#/active" => Route::Active,
-            "#/completed" => Route::Completed,
-            _ => Route::All,
-        }
-    }
-
-    pub fn to_url(&self) -> &'static str {
-        match self {
-            Route::Active => "#/active",
-            Route::Completed => "#/completed",
-            Route::All => "#/",
-        }
-    }
-}
-
-impl Default for Route {
-    fn default() -> Self {
-        // Create the Route based on the current URL
-        Self::from_url(&routing::url().lock_ref())
-    }
-}
 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -80,7 +47,6 @@ impl App {
 
     pub fn serialize(&self) {
         let state_json = serde_json::to_string(self).unwrap();
-
         local_storage()
             .set_item("todos-rust-dominator", state_json.as_str())
             .unwrap();
@@ -92,8 +58,6 @@ impl App {
 
     fn create_new_todo(&self) {
         let mut title = self.new_todo_title.lock_mut();
-
-        // Only create a new Todo if the text box is not empty
         if let Some(trimmed) = trim(&title) {
             let id = self.todo_id.get();
             self.todo_id.set(id + 1);
@@ -153,19 +117,26 @@ impl App {
                 html!("h1", {
                     .text("todos")
                 }),
-
+                html!("navbar", {
+                    .class("filters")
+                    .style("display", "flex").style("margin-right", "10px")
+                    .children(&mut [
+                        Self::render_button(&app, "All", Route::All),
+                        Self::render_button(&app, "Active", Route::Active),
+                        Self::render_button(&app, "Completed", Route::Completed),
+                    ])
+                }),
                 html!("input" => HtmlInputElement, {
+                    .style("margin-top", "20px")
                     .focused(true)
                     .class("new-todo")
                     .attr("placeholder", "What needs to be done?")
                     .prop_signal("value", app.new_todo_title.signal_cloned())
-
                     .with_node!(element => {
                         .event(clone!(app => move |_: events::Input| {
                             app.new_todo_title.set_neq(element.value());
                         }))
                     })
-
                     .event_with_options(&EventOptions::preventable(), clone!(app => move |event: events::KeyDown| {
                         if event.key() == "Enter" {
                             event.prevent_default();
@@ -180,28 +151,23 @@ impl App {
     fn render_main(app: Arc<Self>) -> Dom {
         html!("section", {
             .class("main")
-
             .visible_signal(app.has_todos())
-
             .children(&mut [
                 html!("input" => HtmlInputElement, {
                     .class("toggle-all")
                     .attr("id", "toggle-all")
                     .attr("type", "checkbox")
                     .prop_signal("checked", app.not_completed_len().map(|len| len == 0).dedupe())
-
                     .with_node!(element => {
                         .event(clone!(app => move |_: events::Change| {
                             app.set_all_todos_completed(element.checked());
                         }))
                     })
                 }),
-
                 html!("label", {
                     .attr("for", "toggle-all")
                     .text("Mark all as complete")
                 }),
-
                 html!("ul", {
                     .class("todo-list")
                     .children_signal_vec(app.todo_list.signal_vec_cloned()
@@ -212,7 +178,8 @@ impl App {
     }
 
     fn render_button(app: &App, text: &str, route: Route) -> Dom {
-        html!("li", {
+        html!("span", {
+            .style("margin-right", "10px")
             .children(&mut [
                 link!(route.to_url(), {
                     .text(text)
@@ -225,18 +192,14 @@ impl App {
     fn render_footer(app: Arc<Self>) -> Dom {
         html!("footer", {
             .class("footer")
-
             .visible_signal(app.has_todos())
-
             .children(&mut [
                 html!("span", {
                     .class("todo-count")
-
                     .children(&mut [
                         html!("strong", {
                             .text_signal(app.not_completed_len().map(|len| len.to_string()))
                         }),
-
                         text_signal(app.not_completed_len().map(|len| {
                             if len == 1 {
                                 " item left"
@@ -246,27 +209,13 @@ impl App {
                         })),
                     ])
                 }),
-
-                html!("ul", {
-                    .class("filters")
-                    .children(&mut [
-                        Self::render_button(&app, "All", Route::All),
-                        Self::render_button(&app, "Active", Route::Active),
-                        Self::render_button(&app, "Completed", Route::Completed),
-                    ])
-                }),
-
                 html!("button", {
                     .class("clear-completed")
-
-                    // Show if there is at least one completed item.
                     .visible_signal(app.completed_len().map(|len| len > 0).dedupe())
-
                     .event(clone!(app => move |_: events::Click| {
                         app.remove_all_completed_todos();
                         app.serialize();
                     }))
-
                     .text("Clear completed")
                 }),
             ])
@@ -276,15 +225,12 @@ impl App {
     pub fn render(app: Arc<Self>) -> Dom {
         html!("section", {
             .class("todoapp")
-
-            // Update the Route when the URL changes
             .future(routing::url()
                 .signal_ref(|url| Route::from_url(url))
                 .for_each(clone!(app => move |route| {
                     app.route.set_neq(route);
                     async {}
                 })))
-
             .children(&mut [
                 Self::render_header(app.clone()),
                 Self::render_main(app.clone()),

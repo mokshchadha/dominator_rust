@@ -6,7 +6,8 @@ use dominator::{Dom, html, clone, events, with_node};
 use web_sys::HtmlInputElement;
 
 use crate::util::trim;
-use crate::app::{App, Route};
+use crate::app::{App};
+use crate::router::{Route};
 
 
 #[derive(Debug, Serialize, Deserialize)]

@@ -4,6 +4,7 @@ use crate::app::App;
 mod util;
 mod todo;
 mod app;
+mod router;
 
 #[wasm_bindgen(start)]
 pub fn main_js() {
