@@ -6,6 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$/todomvc/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/components/target" />
       <excludeFolder url="file://$MODULE_DIR$/todomvc/target" />
+      <sourceFolder url="file://$MODULE_DIR$/pip_components/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/pip_components/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -15,6 +15,9 @@ Cargo.lock
 
 dominator-counter/node_modules/*
 
+todomvc/node_modules/*
+pip_components/node_modules/*
+
 .vscode
 
 dist/
