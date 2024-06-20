@@ -33,38 +33,31 @@ impl App {
 
         Self {
             route: Arc::clone(&route),
-            router: Router::new(Arc::clone(&route)),
+            router: Router::new(),
             navbar: Navbar::new(Arc::clone(&route)),
         }
     }
 
     fn render(self) -> Dom {
-        let route = Arc::clone(&self.route);
+        // let route = Arc::clone(&self.route);
         html!("div", {
             .child(self.navbar.render())
             .child_signal(self.route.signal_cloned().map(move |route| {
                 Some(self.router.render(&route))
             }))
         })
-        // html!("div", {
-        //     .child(self.navbar.render())
-        //
-        // })
     }
 }
 
 struct Router {
     components: HashMap<String, Box<dyn Fn() -> Dom>>,
-    route: Arc<Mutable<String>>,
+    // route: Arc<Mutable<String>>,
 }
 
 impl Router {
-    fn new(route: Arc<Mutable<String>>) -> Self {
+    fn new() -> Self {
         let comp = create_components_map();
-        Self {
-            components: comp,
-            route,
-        }
+        Self { components: comp }
     }
 
     fn render(&self, route: &String) -> Dom {
@@ -85,6 +78,7 @@ impl Navbar {
 
     fn render(self) -> Dom {
         html!("nav", {
+            .attr("class", "bg-white shadow-md mb-2 p-2")
             .children(vec![
                 self.link("Home", "/"),
                 self.link("About", "/about"),
@@ -95,14 +89,30 @@ impl Navbar {
 
     fn link(&self, title: &str, path: &str) -> Dom {
         let route = self.route.clone();
+
         let path = path.to_string();
+        let current_route = get_route();
+        let active_class = if current_route == path {
+            "text-black hover:text-blue-500 m-1"
+        } else {
+            "text-black hover:text-red-500 m-1"
+        };
         html!("a", {
             .attr("href", &format!("#{}", path))
+            .attr("class", active_class)
             .text(title)
             .event(clone!(route => move |_: events::Click| {
                 route.set(path.clone());
             }))
         })
+    }
+}
+
+fn link_style(route: &str, current_route: &str) -> &'static str {
+    if route == current_route {
+        "text-black hover:text-blue-500 m-1"
+    } else {
+        "bg-grey text-blue hover:text-blue-500 m-1"
     }
 }
 
