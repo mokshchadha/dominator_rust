@@ -6,6 +6,12 @@ use futures_signals::signal::{Mutable, SignalExt};
 use wasm_bindgen::prelude::*;
 use web_sys::window;
 
+use pages::about::About;
+use pages::contact::Contact;
+use pages::home::Home;
+
+mod pages;
+
 #[wasm_bindgen(start)]
 pub fn main_js() {
     dominator::append_dom(&dominator::body(), App::new().render());
@@ -146,32 +152,4 @@ fn get_route() -> String {
         .unwrap_or_else(|| "/#".to_string())
         .trim_start_matches("#")
         .to_string()
-}
-
-struct Home {}
-
-impl Home {
-    fn render() -> Dom {
-        html!("div", {
-            .text("Home Page")
-        })
-    }
-}
-
-struct About {}
-
-impl About {
-    fn render() -> Dom {
-        html!("div" ,{
-            .text("About Page")
-        })
-    }
-}
-
-struct Contact {}
-
-impl Contact {
-    fn render() -> Dom {
-        html!("div", {.text("Contact Page")})
-    }
 }
